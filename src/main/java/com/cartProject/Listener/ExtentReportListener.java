@@ -50,8 +50,11 @@ public class ExtentReportListener implements ITestListener {
 		extentReports.setSystemInfo("Build#", "1.1");
 		extentReports.setSystemInfo("Team", "CartPage QA Team");
 		extentReports.setSystemInfo("Customer Name", "AAL");
-
-		//extentReports.setSystemInfo("ENV NAME", System.getProperty("env"));
+		 String buildNumber = System.getenv("BUILD_NUMBER"); // Get build number from Jenkins
+	     extentReports.setSystemInfo("Build Number", buildNumber != null ? buildNumber : "Not Available");
+	     String envName = System.getenv("ENV NAME"); 
+		extentReports.setSystemInfo("ENV NAME",envName);
+		extentReports.setSystemInfo("BUILD ID",System.getenv("BUILD_ID"));
 
 		return extentReports;
 	}
