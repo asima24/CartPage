@@ -39,7 +39,7 @@ pipeline
         stage('Regression Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/asima24/OpenCart.git'
+                    git 'https://github.com/asima24/CartPage.git'
                     bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml"
                     
                 }
@@ -83,7 +83,7 @@ pipeline
         stage('Sanity Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/asima24/OpenCart.gi'
+                    git 'https://github.com/asima24/CartPage.git'
                     bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml"
                     
                 }
