@@ -11,9 +11,18 @@ pipeline
     {
         stage('Build') 
         {
-          
-            steps {
-                echo 'Build the project'
+            steps
+            {
+                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                 bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+            post 
+            {
+                success
+                {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
             }
         }
         
@@ -30,7 +39,7 @@ pipeline
         stage('Regression Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/asima24/CartPage.git'
+                    git 'https://github.com/asima24/OpenCart.git'
                     bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml"
                     
                 }
@@ -65,8 +74,37 @@ pipeline
             }
         }
         
-       
-         
+        stage("Deploy to Stage"){
+            steps{
+                echo("deploy to Stage")
+            }
+        }
+        
+        stage('Sanity Automation Test') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/asima24/OpenCart.gi'
+                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml"
+                    
+                }
+            }
+        }
+        
+        
+        
+        stage('Publish sanity Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: true, 
+                                  reportDir: 'reports', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Sanity Extent Report', 
+                                  reportTitles: ''])
+            }
+        }
+        
         
     }
 }
+
